@@ -12,6 +12,8 @@ import {
 } from 'react-native';
 import styles from './confirmation.styles';
 import HeaderBack from './components/header-back';
+import {Auth} from 'aws-amplify';
+
 class Confirmation extends React.Component {
   openRetour = () => {
     this.props.navigation.navigate('login');
@@ -39,8 +41,35 @@ class Confirmation extends React.Component {
       char3: '-',
       char4: '-',
       isFocused: true,
+      code: '',
+      canGo: false,
+      connect: this.props.navigation.navigate('isConfirmed'),
     };
   }
+
+  onChangeText = async code => {
+    let canGo = false;
+    this.setState({
+      code,
+    });
+    if (code.length == 6) {
+      console.log(code);
+      canGo = true;
+      try {
+        const response = await Auth.confirmSignUp(
+          '+33' + this.state.connect,
+          code,
+        );
+        console.log('response:', JSON.stringify(response));
+        this.props.navigation.navigate('confirmed');
+      } catch (error) {
+        console.log('error confirming sign up', error);
+      }
+    }
+    this.setState({
+      canGo,
+    });
+  };
 
   handleFocus = () => this.setState({isFocused: true});
 
@@ -68,7 +97,7 @@ class Confirmation extends React.Component {
             <Text style={styles.titre}>Confirmez votre numéro !</Text>
 
             <Text style={styles.nbm}>
-              Entrez le code envoyé au +33652026209
+              Entrez le code envoyé au +33 {this.state.connect}
             </Text>
 
             <TextInput
@@ -83,7 +112,7 @@ class Confirmation extends React.Component {
               keyboardType="numeric"
               autoFocus={true}
               maxLength={4}
-              onChangeText={secretCode => this.onChangeSecretCode(secretCode)}
+              onChangeText={code => this.onChangeText(code)}
               value={this.state.secretCode}
               onFocus={this.handleFocus}
               onBlur={this.handleBlur}

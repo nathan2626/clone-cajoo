@@ -6,6 +6,7 @@ import Landing from '../features/onboarding/landing/landing.screen';
 import Login from '../features/onboarding/login/login.screen';
 import Connect from '../features/onboarding/connectNumber/connect.screen';
 import Confirmation from '../features/onboarding/confirmation/confirmation.screen';
+import IsConfirmed from '../features/onboarding/isConfirmed/isConfirmed.screen';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ const rootContainer = () => {
         <Stack.Screen name="login" component={Login} />
         <Stack.Screen name="connect" component={Connect} />
         <Stack.Screen name="confirmation" component={Confirmation} />
+        <Stack.Screen name="isConfirmed" component={IsConfirmed} />
       </Stack.Navigator>
     </NavigationContainer>
   );

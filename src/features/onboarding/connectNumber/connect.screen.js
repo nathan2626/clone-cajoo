@@ -13,6 +13,8 @@ import {
 import styles from './connect.styles';
 import HeaderBack from './components/header-back';
 import {connectValidate} from './components/connect.helper';
+import {Auth} from 'aws-amplify';
+
 class Connect extends React.Component {
   openRetour = () => {
     this.props.navigation.navigate('login');
@@ -30,6 +32,22 @@ class Connect extends React.Component {
     };
   }
 
+  submit = async () => {
+    if (this.state.canGo) {
+      try {
+        const {user} = await Auth.signUp({
+          username: '+33' + this.state.connect,
+          password: 'Azertyuiop1!',
+        });
+        console.log('utilisateur créé:', user);
+        this.props.navigation.navigate('isConfirmed', {
+          connect: this.state.connect,
+        });
+      } catch (error) {
+        console.log('error signing up:', error);
+      }
+    }
+  };
   onChangeConnect = connect => {
     let canGo = false;
     this.setState({
@@ -76,8 +94,8 @@ class Connect extends React.Component {
 
           <View style={styles.bottomContainer}>
             <TouchableOpacity
-              style={this.state.canGo ? styles.button3 : styles.button3Disable} 
-              onPress={this.openConfirmation} >
+              style={this.state.canGo ? styles.button3 : styles.button3Disable}
+              onPress={this.openConfirmation}>
               <Text style={styles.textButton3}>CONTINUER</Text>
             </TouchableOpacity>
           </View>
